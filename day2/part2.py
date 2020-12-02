@@ -1,5 +1,7 @@
+import sys
+
 valid_passwords = 0
-with open('./input') as passwords_input:
+with open(sys.argv[1]) as passwords_input:
     for password_spec in passwords_input:
         (valid_range, letter, password) = password_spec.split(' ')
         letter = letter[0]

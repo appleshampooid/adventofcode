@@ -1,7 +1,9 @@
+import sys
+
 expenses = []
 answer_part1 = None
 answer_part2 = None
-with open('./input') as expenses_input:
+with open(sys.argv[1]) as expenses_input:
     for expense in expenses_input:
         current_expense = int(expense)
         for past_expense in expenses:
