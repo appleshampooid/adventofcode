@@ -13,7 +13,7 @@ required_fields = set(['byr',
 height_regex = re.compile('(\d+)(cm|in)')
 hcl_regex = re.compile('#[0-9a-f]{6}')
 ecl_regex = re.compile('amb|blu|brn|gry|grn|hzl|oth')
-pid_regex = re.compile('\d{9}')
+pid_regex = re.compile('^\d{9}$')
 with open(sys.argv[1]) as passports_input:
     passport_data= passports_input.read()
 passports = passport_data.split('\n\n')
@@ -73,7 +73,7 @@ for (i, passport) in enumerate(passports):
                 valid = False
                 continue
         elif key == 'pid':
-            if not (pid_regex.match(value) and len(value) == 9):
+            if not (pid_regex.match(value)):
                 print(f'invalid pid on {i}')
                 valid = False
                 continue
