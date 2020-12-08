@@ -15,7 +15,7 @@ while True:
     step = 1
     arg = int(instruction[1])
     if instruction[0] == 'acc':
-        accumulator =+ arg
+        accumulator += arg
     elif instruction[0] == 'jmp':
         step = arg
     instruction_pointer += step
