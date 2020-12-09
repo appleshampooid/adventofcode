@@ -1,7 +1,7 @@
 import sys
 from itertools import combinations
 preamble_size = int(sys.argv[2])
-cipher = []
+ciphertext = []
 
 def valid(x, addends):
     # print(f'x is {x}, addends are {addends}')
@@ -14,17 +14,17 @@ invalid = None
 with open(sys.argv[1]) as xmas_input:
     for i, line in enumerate(xmas_input):
         x = int(line)
-        cipher.append(x)
+        ciphertext.append(x)
         if i >= preamble_size and not invalid:
-            if not valid(x, cipher[i - preamble_size:i]):
+            if not valid(x, ciphertext[i - preamble_size:i]):
                 invalid = x
                 print(f'Part 1: the invalid number is {invalid}')
 
-for i, x in enumerate(cipher):
+for i, x in enumerate(ciphertext):
     sum = x
     smallest = x
     largest = x
-    for y in cipher[1+i:]:
+    for y in ciphertext[1+i:]:
         if y > largest:
             largest = y
         if y < smallest:
