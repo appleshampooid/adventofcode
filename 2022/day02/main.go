@@ -38,15 +38,15 @@ func main() {
 		"C": scissors,
 		"Z": scissors}
 	scanner := bufio.NewScanner(inputFile)
-	totalScoreDay1 := 0
-	totalScoreDay2 := 0
+	totalScorePart1 := 0
+	totalScorePart2 := 0
 	for scanner.Scan() {
 		plays := strings.Split(scanner.Text(), " ")
-		totalScoreDay1 += scoreRound(mapper[plays[0]], mapper[plays[1]])
-		totalScoreDay2 += scoreRound(mapper[plays[0]], determineMyPlay(mapper[plays[0]], plays[1]))
+		totalScorePart1 += scoreRound(mapper[plays[0]], mapper[plays[1]])
+		totalScorePart2 += scoreRound(mapper[plays[0]], determineMyPlay(mapper[plays[0]], plays[1]))
 	}
-	fmt.Printf("Total score for day 1 is %d\n", totalScoreDay1)
-	fmt.Printf("Total score for day 2 is %d\n", totalScoreDay2)
+	fmt.Printf("Total score for part 1 is %d\n", totalScorePart1)
+	fmt.Printf("Total score for part 2 is %d\n", totalScorePart2)
 }
 
 func scoreRound(theirs, mine int) int {
