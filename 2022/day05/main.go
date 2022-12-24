@@ -26,21 +26,19 @@ func main() {
 	defer inputFile.Close()
 	var stacks []util.Stack[byte] = make([]util.Stack[byte], 0, 5)
 	var rawStacks util.Stack[string] = util.NewStack[string]()
+	stackLabel := regexp.MustCompile(`^(?: *(\d+) *)+$`)
+	move := regexp.MustCompile(`move (\d+) from (\d+) to (\d+)`)
 	scanner := bufio.NewScanner(inputFile)
 	for scanner.Scan() {
 		line := scanner.Text()
-		stackLabel := regexp.MustCompile(`^(?: *(\d+) *)+$`)
 		groups := stackLabel.FindStringSubmatch(line)
 		if groups != nil {
 			numStacks, _ := strconv.Atoi(groups[1])
 			fmt.Printf("We have reached the stack labels, and we have %d of them\n", numStacks)
 			fmt.Printf("Raw stacks are:\n")
 			rawStacks.Print()
-			for {
-				stackLine, err := rawStacks.Pop()
-				if err != nil {
-					break
-				}
+			// for (int i = 0; i < 10; i++)
+			for stackLine, err := rawStacks.Pop(); err == nil; stackLine, err = rawStacks.Pop() {
 				stack := 0
 				for {
 					remaining := len(stackLine)
@@ -65,10 +63,35 @@ func main() {
 			}
 			fmt.Println("stacks are:")
 			printByteStacks(stacks)
-		} else {
+		} else if len(stacks) == 0 {
 			rawStacks.Push(line)
+		} else {
+			if line == "" {
+				continue
+			}
+			moves := move.FindStringSubmatch(line)
+			if moves == nil || len(moves) != 4 {
+				panic(fmt.Sprintf("malformed input: length %d", len(moves)))
+			}
+			quantity, _ := strconv.Atoi(moves[1])
+			source, _ := strconv.Atoi(moves[2])
+			dest, _ := strconv.Atoi(moves[3])
+			fmt.Printf("%d %d %d\n", quantity, source, dest)
+			// part 1 answer
+			// executeMove9000(stacks, quantity, source, dest)
+			// part2 answer
+			executeMove9001(stacks, quantity, source, dest)
 		}
 	}
+	var tops []byte
+	for _, stack := range stacks {
+		top, err := stack.Peek()
+		if err != nil {
+			panic("Malformed input when peeking at end condition")
+		}
+		tops = append(tops, top)
+	}
+	fmt.Printf("Top of the stacks are: %s\n", tops)
 }
 
 func printStacks[T interface{}](stacks []util.Stack[T]) {
@@ -85,4 +108,24 @@ func printByteStacks(stacks []util.Stack[byte]) {
 		s.PrintByteStack()
 		fmt.Print("]\n")
 	}
+}
+
+func executeMove9000(stacks []util.Stack[byte], quantity, source, dest int) {
+	for i := 0; i < quantity; i++ {
+		b, err := stacks[source-1].Pop()
+		if err != nil {
+			panic("Malformed stacks/instructions")
+		}
+		stacks[dest-1].Push(b)
+		fmt.Printf("Moved 1 block from %d to %d\n", source, dest)
+	}
+}
+
+func executeMove9001(stacks []util.Stack[byte], quantity, source, dest int) {
+	b, err := stacks[source-1].PopN(quantity)
+	if err != nil {
+		panic("Malformed stacks/instructions")
+	}
+	stacks[dest-1].PushN(b)
+	fmt.Printf("Moved %d block from %d to %d\n", quantity, source, dest)
 }

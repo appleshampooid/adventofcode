@@ -13,6 +13,10 @@ func (s *Stack[T]) Push(b T) {
 	s.data = append(s.data, b)
 }
 
+func (s *Stack[T]) PushN(b []T) {
+	s.data = append(s.data, b...)
+}
+
 func (s *Stack[T]) Pop() (T, error) {
 	length := len(s.data)
 	var b T
@@ -21,6 +25,27 @@ func (s *Stack[T]) Pop() (T, error) {
 	}
 	b = s.data[length-1]
 	s.data = s.data[0 : length-1]
+	return b, nil
+}
+
+func (s *Stack[T]) PopN(n int) ([]T, error) {
+	length := len(s.data)
+	var b []T
+	if length < n {
+		return b, fmt.Errorf("Stack doesn't have %d elements!", n)
+	}
+	b = s.data[length-n:]
+	s.data = s.data[0 : length-n]
+	return b, nil
+}
+
+func (s *Stack[T]) Peek() (T, error) {
+	length := len(s.data)
+	var b T
+	if length == 0 {
+		return b, errors.New("Stack is empty!")
+	}
+	b = s.data[length-1]
 	return b, nil
 }
 
